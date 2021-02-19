@@ -38,6 +38,29 @@ services:
     networks:
       - promnet
 
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql-exporter
+    ports:
+      - 9104:9104
+    volumes:
+      - ./mysql-exporter/.my.cnf:/root/.my.cnf
+    environment: 
+      - DATA_SOURCE_NAME='admin:admin@(localhost:9104)/db'
+      - collect.info_schema.tablestats=true
+      - collect.info_schema.userstats=true
+      - collect.info_schema.query_response_time=true
+      - collect.auto_increment.columns=true
+      - collect.binlog_size=true
+      - collect.perf_schema.eventsstatements=true
+      - collect.perf_schema.eventswaits=true
+      - collect.perf_schema.file_events=true
+      - collect.perf_schema.indexiowaits=true
+      - collect.perf_schema.tableiowaits=true
+      - collect.perf_schema.tablelocks=true
+    networks:
+      - promnet
+
   cadvisor:
     image: google/cadvisor
     ports:
